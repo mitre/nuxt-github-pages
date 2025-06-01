@@ -7,14 +7,20 @@ export default createConfigForNuxt({
     // Rules for module authors
     tooling: true,
     // Rules for formatting
-    stylistic: true
+    stylistic: true,
   },
   dirs: {
     src: [
-      './playground'
-    ]
-  }
+      './playground',
+    ],
+  },
 })
   .append(
-    // your custom flat config here...
+    // Disable component name rule for test fixtures
+    {
+      files: ['test/fixtures/**/*.vue'],
+      rules: {
+        'vue/multi-word-component-names': 'off',
+      },
+    },
   )

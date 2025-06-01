@@ -1,5 +1,5 @@
-import { promises as fs } from 'fs'
-import { join, dirname, resolve } from 'path'
+import { promises as fs } from 'node:fs'
+import { join, dirname, resolve } from 'node:path'
 import { defineNuxtModule, logger } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
@@ -26,13 +26,13 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-github-pages',
     configKey: 'githubPages',
     compatibility: {
-      nuxt: '>=3.0.0'
-    }
+      nuxt: '>=3.0.0',
+    },
   },
   defaults: {
     enabled: true,
     outputDirs: ['dist', '.output/public'],
-    verbose: true
+    verbose: true,
   },
   setup(options, nuxt) {
     if (!options.enabled) {
@@ -48,7 +48,9 @@ export default defineNuxtModule<ModuleOptions>({
     // Add the prerender:done hook
     nuxt.hook('nitro:config', (nitroConfig) => {
       nitroConfig.hooks = nitroConfig.hooks || {}
-      ;(nitroConfig.hooks as any)['prerender:done'] = async () => {
+      // Type assertion for dynamic hook assignment
+      const hooks = nitroConfig.hooks as Record<string, () => void | Promise<void>>
+      hooks['prerender:done'] = async () => {
         const possibleDirs = options.outputDirs!.map(dir => resolve(dir))
         let publicDir: string | null = null
 
@@ -61,7 +63,8 @@ export default defineNuxtModule<ModuleOptions>({
               logger.success(`Found output directory: ${dir}`)
             }
             break
-          } catch {
+          }
+          catch {
             // Directory doesn't exist, try next
           }
         }
@@ -87,7 +90,8 @@ export default defineNuxtModule<ModuleOptions>({
                 }
                 // Recursively process subdirectories
                 await processDirectory(fullPath)
-              } else if (entry.isFile() && entry.name === 'index.html') {
+              }
+              else if (entry.isFile() && entry.name === 'index.html') {
                 // Found an index.html file
                 const relativePath = fullPath.replace(publicDir! + '/', '')
                 const dirPath = dirname(relativePath)
@@ -103,12 +107,14 @@ export default defineNuxtModule<ModuleOptions>({
                   if (options.verbose) {
                     logger.success(`Created duplicate: ${dirPath}.html`)
                   }
-                } catch (error) {
+                }
+                catch (error) {
                   logger.error(`Failed to create duplicate for ${relativePath}:`, error)
                 }
               }
             }
-          } catch (error) {
+          }
+          catch (error) {
             logger.error(`Error processing directory ${dir}:`, error)
           }
         }
@@ -123,5 +129,5 @@ export default defineNuxtModule<ModuleOptions>({
         }
       }
     })
-  }
+  },
 })
