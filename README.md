@@ -184,6 +184,10 @@ export default defineNuxtConfig({
 })
 ```
 
+## Testing
+
+See [TEST_MATRIX.md](./TEST_MATRIX.md) for current test coverage and known gaps.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
