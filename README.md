@@ -4,6 +4,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
+[![CI][ci-src]][ci-href]
 
 Nuxt module to fix trailing slash issues when deploying to GitHub Pages. This module ensures your static Nuxt site works correctly with GitHub Pages' file resolution behavior.
 
@@ -247,3 +248,6 @@ Created by [MITRE](https://github.com/mitre) for the open source community.
 
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com
+
+[ci-src]: https://img.shields.io/github/actions/workflow/status/mitre/nuxt-github-pages/ci.yml?branch=main&style=flat&colorA=020420&colorB=00DC82
+[ci-href]: https://github.com/mitre/nuxt-github-pages/actions/workflows/ci.yml
