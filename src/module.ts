@@ -1,6 +1,6 @@
-import { defineNuxtModule, logger } from '@nuxt/kit'
 import { promises as fs } from 'fs'
 import { join, dirname, resolve } from 'path'
+import { defineNuxtModule, logger } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
@@ -9,13 +9,11 @@ export interface ModuleOptions {
    * @default true
    */
   enabled?: boolean
-  
   /**
    * Additional directories to check for output
    * @default ['dist', '.output/public']
    */
   outputDirs?: string[]
-  
   /**
    * Log output during processing
    * @default true
@@ -50,7 +48,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Add the prerender:done hook
     nuxt.hook('nitro:config', (nitroConfig) => {
       nitroConfig.hooks = nitroConfig.hooks || {}
-      nitroConfig.hooks['prerender:done'] = async () => {
+      ;(nitroConfig.hooks as any)['prerender:done'] = async () => {
         const possibleDirs = options.outputDirs!.map(dir => resolve(dir))
         let publicDir: string | null = null
 
@@ -118,9 +116,8 @@ export default defineNuxtModule<ModuleOptions>({
         if (options.verbose) {
           logger.info('Creating duplicate HTML files for GitHub Pages...')
         }
-        
+
         await processDirectory(publicDir)
-        
         if (options.verbose) {
           logger.success('Duplicate file creation complete')
         }
