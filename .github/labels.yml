@@ -1,0 +1,42 @@
+# GitHub Labels Configuration
+# Use with github-label-sync or similar tools
+
+- name: "release:major"
+  color: "e11d21"
+  description: "Breaking changes - triggers major version bump on merge"
+
+- name: "release:minor"
+  color: "eb6420"
+  description: "New features - triggers minor version bump on merge"
+
+- name: "release:patch"
+  color: "fbca04"
+  description: "Bug fixes - triggers patch version bump on merge"
+
+- name: "no-release"
+  color: "d4c5f9"
+  description: "Changes that should not trigger a release"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Updates to dependencies"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Documentation only changes"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "chore"
+  color: "fef2c0"
+  description: "Maintenance tasks"
+
+- name: "security"
+  color: "b60205"
+  description: "Security-related changes"

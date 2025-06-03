@@ -333,6 +333,16 @@ pnpm run dev:prepare
 pnpm run test:all
 ```
 
+### CI/CD Process
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **CI**: Runs on every push and PR (linting, type checking, tests, security)
+- **Release**: Manual workflow for creating releases (version bump, npm publish, GitHub release)
+- **Auto Release**: PRs with `release:patch`, `release:minor`, or `release:major` labels trigger automatic releases when merged
+
+See [.github/SETUP.md](.github/SETUP.md) for workflow configuration details.
+
 ## Development
 
 ```bash

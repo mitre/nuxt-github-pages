@@ -177,6 +177,15 @@ pnpm run test:watch
    - Reference to any related issues
    - Screenshots/examples if applicable
 
+### Release Labels
+
+Add one of these labels to your PR to trigger an automatic release when merged:
+- `release:patch` - Bug fixes (1.0.0 → 1.0.1)
+- `release:minor` - New features (1.0.0 → 1.1.0)
+- `release:major` - Breaking changes (1.0.0 → 2.0.0)
+
+If no release label is added, the PR will not trigger a release when merged.
+
 ## Coding Standards
 
 - Use TypeScript for all new code

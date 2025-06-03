@@ -1,0 +1,44 @@
+name: Auto Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  check-release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      version_type: ${{ steps.check.outputs.version_type }}
+    
+    steps:
+      - name: Check PR labels
+        id: check
+        run: |
+          labels='${{ toJson(github.event.pull_request.labels.*.name) }}'
+          echo "PR Labels: $labels"
+          
+          if echo "$labels" | grep -q "release:major"; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "version_type=major" >> $GITHUB_OUTPUT
+          elif echo "$labels" | grep -q "release:minor"; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "version_type=minor" >> $GITHUB_OUTPUT
+          elif echo "$labels" | grep -q "release:patch"; then
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "version_type=patch" >> $GITHUB_OUTPUT
+          else
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  auto-release:
+    needs: check-release
+    if: needs.check-release.outputs.should_release == 'true'
+    uses: ./.github/workflows/release.yml
+    with:
+      version_type: ${{ needs.check-release.outputs.version_type }}
+      create_github_release: true
+    secrets: inherit
