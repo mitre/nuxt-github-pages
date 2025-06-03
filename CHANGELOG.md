@@ -7,9 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-06-03
+
+[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.4.1...v1.5.0)
+
 ### 🚀 Enhancements
 - Add `createDuplicates` option to control HTML file duplication
+  - New option (default: `true`) allows disabling file duplication
+  - Useful for non-GitHub Pages deployments
+  - Includes comprehensive test coverage
 - Add Dependabot auto-merge workflow for patch/minor updates
+- Improve developer experience with auto-prepare in test commands
+- Add `test:clean` command for pristine test runs
+
+### 📖 Documentation
+- Add unreleased changes to CHANGELOG
+- Add troubleshooting guide for clean commands
+
+### 🏡 Chore
+- **deps**: Bump softprops/action-gh-release from 1 to 2
+- **deps-dev**: Bump vitest from 3.1.4 to 3.2.0
+
+### 🔧 Development
+- Enhance clean script to remove temporary test fixtures
+- Remove redundant prepare steps from CI workflows
+
+
+## [1.4.0] - 2025-06-03
+
+[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.3.1...v1.4.0)
+
+### 🚀 Enhancements
 - Add `release-prod.sh` script for streamlined GitHub Actions releases
 - Add `--dry-run` flag to release script for testing
 - Add npm version sync checking to prevent conflicts
@@ -25,22 +53,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add dependency management section to CONTRIBUTING
 - Improve auto-release safety by requiring explicit labels
 
-### 🏡 Chore
-- **deps**: Bump softprops/action-gh-release from 1 to 2
-- **deps-dev**: Bump vitest from 3.1.4 to 3.2.0
-
-### ⚡ Performance
-- Optimize CI with 3-minute timeouts for build-heavy tests
-
 ### 🔧 Development
 - Require `--local` flag for direct releases via release.sh
 - Add comprehensive workflow documentation in .github/SETUP.md
 
-## v1.1.1
+### ⚠️ Breaking Changes
+- `release.sh` now requires `--local` or `--dry-run` flag
 
-[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.1.0...v1.1.1)
+## [1.3.0-1.3.1] - 2025-06-03
 
-## [1.1.0] - 2025-02-03
+[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.2.0...v1.3.1)
+
+### 🩹 Fixes
+- Add vitest config with 3-minute timeouts for CI
+- Remove all pnpm version specifications from CI workflow
+- Resolve CI/CD workflow issues and test failures
+
+### 💅 Refactors
+- Consolidate CI/CD workflows
+
+## [1.2.0] - 2025-06-03
+
+[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.1.1...v1.2.0)
+
+### 🚀 Enhancements
+- Add comprehensive developer scripts (test:all, clean)
+- Implement git hooks with Husky and lint-staged
+- Create streamlined release process script
+- Add security scanning (pnpm audit, Dependabot)
+
+### 📖 Documentation
+- Add CONTRIBUTING.md with detailed guidelines
+- Create SECURITY.md with security policy
+- Add comprehensive test documentation
+- Document release process
+
+### 🏡 Chore
+- Set up GitHub Actions workflows for CI/CD
+- Configure Dependabot for automatic updates
+- Add pre-commit hooks for code quality
+
+## [1.1.0-1.1.1] - 2025-06-03
+
+[compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.0.0...v1.1.1)
 
 ### Added
 - Canonical URL injection feature to prevent SEO duplicate content issues (#15462)
