@@ -82,7 +82,8 @@ jobs:
       - name: Bump version
         id: bump_version
         run: |
-          NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --no-git-tag-version)
+          VERSION_TYPE=${{ github.event.inputs.version_type || inputs.version_type }}
+          NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
           echo "new_version=${NEW_VERSION#v}" >> $GITHUB_OUTPUT
       
       - name: Update CHANGELOG
@@ -113,7 +114,7 @@ jobs:
         run: git push origin main --follow-tags
       
       - name: Create GitHub Release
-        if: ${{ github.event.inputs.create_github_release == 'true' }}
+        if: ${{ github.event.inputs.create_github_release == 'true' || inputs.create_github_release == true }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.bump_version.outputs.new_version }}
