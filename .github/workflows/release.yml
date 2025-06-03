@@ -115,7 +115,7 @@ jobs:
       
       - name: Create GitHub Release
         if: ${{ github.event.inputs.create_github_release == 'true' || inputs.create_github_release == true }}
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.bump_version.outputs.new_version }}
           generate_release_notes: true
