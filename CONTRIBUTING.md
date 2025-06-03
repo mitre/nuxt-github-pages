@@ -244,6 +244,20 @@ If no release label is added, the PR will not trigger a release when merged.
 - Keep the module lightweight (no unnecessary dependencies)
 - Ensure backward compatibility
 
+## Dependency Management
+
+### Dependabot
+
+We use Dependabot to keep dependencies up to date:
+
+- **Patch and minor updates**: Automatically approved and merged
+- **Major updates**: Require manual review due to potential breaking changes
+- **Grouped updates**: Non-major npm updates are grouped weekly
+
+**Note**: Dependabot PRs do NOT trigger automatic releases. To release dependency updates:
+1. Wait for multiple Dependabot PRs to merge
+2. Create a manual release: `./scripts/release-prod.sh patch`
+
 ## Project Structure
 
 ```
