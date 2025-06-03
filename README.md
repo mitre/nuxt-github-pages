@@ -184,7 +184,7 @@ These require server configuration access, which you don't have with GitHub Page
 
 We use GitHub Actions for all production releases to ensure consistency and security.
 
-#### Production Releases (Recommended)
+#### Option 1: Manual Release (Recommended)
 
 ```bash
 # Using our convenience script
@@ -195,6 +195,15 @@ We use GitHub Actions for all production releases to ensure consistency and secu
 # Or directly with GitHub CLI
 gh workflow run release.yml --field version_type=patch --field create_github_release=true
 ```
+
+#### Option 2: Automated PR Release
+
+Add a release label to your PR before merging:
+- `release:patch` - Bug fixes
+- `release:minor` - New features
+- `release:major` - Breaking changes
+
+The release will trigger automatically when the PR is merged.
 
 #### Local Development
 
