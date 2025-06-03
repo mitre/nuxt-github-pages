@@ -34,13 +34,15 @@ The npm automation token is required for publishing packages to npm.
 - **Required**: NPM_TOKEN secret
 
 ### Auto Release (auto-release.yml)
-- **Triggers**: When PR is merged to main
+- **Triggers**: When PR is merged to main with a release label
 - **Purpose**: Automatically release based on PR labels
 - **Labels**:
   - `release:patch` - Triggers patch release (1.0.0 → 1.0.1)
   - `release:minor` - Triggers minor release (1.0.0 → 1.1.0)
   - `release:major` - Triggers major release (1.0.0 → 2.0.0)
-- **Required**: NPM_TOKEN secret
+- **Required**: 
+  - NPM_TOKEN secret
+  - The release.yml workflow must include `workflow_call` trigger
 
 ### Label Sync (sync-labels.yml)
 - **Triggers**: Changes to .github/labels.yml or manual
