@@ -31,6 +31,9 @@ fi
 if [ -d "test" ]; then
   echo "  Cleaning temporary test files..."
   rm -rf test/tmp-*
+  # Clean temporary test fixtures created by tests
+  rm -rf test/fixtures/*-test 2>/dev/null || true
+  rm -rf test/fixtures/integration-test 2>/dev/null || true
 fi
 
 # Clean coverage reports

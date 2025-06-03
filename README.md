@@ -81,7 +81,10 @@ export default defineNuxtConfig({
     canonicalUrls: true,
     
     // Use trailing slashes in canonical URLs (default: false)
-    trailingSlash: false
+    trailingSlash: false,
+    
+    // Create duplicate HTML files to avoid redirects (default: true)
+    createDuplicates: true
   }
 })
 ```
@@ -112,6 +115,13 @@ export default defineNuxtConfig({
 - Type: `boolean`
 - Default: `false`
 - Description: Whether to use trailing slashes in canonical URLs. When `false`, canonical URLs will be `/path`. When `true`, they will be `/path/`. Choose based on your site's URL structure preference.
+
+#### `createDuplicates`
+- Type: `boolean`
+- Default: `true`
+- Description: Create duplicate HTML files to fix GitHub Pages routing. When `true`, creates both `/path/index.html` and `/path.html`. Set to `false` if you only need canonical URLs without file duplication (e.g., for other hosting platforms or if you handle redirects differently).
+
+⚠️ **Warning**: Setting this to `false` will cause 404 errors on GitHub Pages for URLs without trailing slashes.
 
 ## How It Works
 

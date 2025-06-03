@@ -5,31 +5,35 @@
 
 set -e  # Exit on error
 
-echo "🔧 Step 1: Installing dependencies..."
+echo "🧹 Step 1: Cleaning build artifacts..."
+pnpm run clean
+
+echo ""
+echo "🔧 Step 2: Installing dependencies..."
 pnpm install
 
 echo ""
-echo "🔧 Step 2: Preparing development environment..."
+echo "🔧 Step 3: Preparing development environment..."
 pnpm run dev:prepare
 
 echo ""
-echo "🧪 Step 3: Running tests..."
+echo "🧪 Step 4: Running tests..."
 pnpm test
 
 echo ""
-echo "📝 Step 4: Running linter..."
+echo "📝 Step 5: Running linter..."
 pnpm lint
 
 echo ""
-echo "🔍 Step 5: Running type checking..."
+echo "🔍 Step 6: Running type checking..."
 pnpm run test:types
 
 echo ""
-echo "🔒 Step 6: Running security audit..."
+echo "🔒 Step 7: Running security audit..."
 pnpm audit
 
 echo ""
-echo "🧹 Step 7: Cleaning build artifacts..."
+echo "🧹 Step 8: Cleaning build artifacts..."
 pnpm run clean
 
 echo ""

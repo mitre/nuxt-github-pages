@@ -107,13 +107,14 @@ pnpm run dev:build    # Build playground
 pnpm run dev:prepare  # Prepare development environment
 
 # Testing
-pnpm test            # Run tests
+pnpm test            # Run tests (includes auto-prepare)
+pnpm run test:clean  # Clean everything and run tests
 pnpm run test:watch  # Run tests in watch mode
 pnpm run test:types  # Run type checking
 
 # Code Quality
 pnpm run lint        # Run ESLint
-pnpm run clean       # Clean build artifacts
+pnpm run clean       # Clean all build artifacts and test fixtures
 
 # Quality & Security
 pnpm audit           # Check for vulnerabilities
@@ -293,6 +294,29 @@ This interactive script will:
 - Optionally create GitHub release (no browser popup!)
 
 The entire process is streamlined and doesn't require manual version updates or browser interactions.
+
+## Troubleshooting
+
+### When to use `pnpm run clean`
+
+Run the clean command when you encounter:
+- Strange build errors or stale artifacts
+- TypeScript errors about missing types
+- Test failures that don't make sense
+- Before switching branches with major changes
+- After updating dependencies
+
+The clean command removes:
+- All build outputs (.nuxt, dist, .output)
+- Test fixture artifacts
+- Temporary test directories
+- Coverage reports
+
+### Common Issues
+
+1. **TypeScript errors**: Run `pnpm run dev:prepare`
+2. **Test failures**: Try `pnpm run test:clean` for a fresh start
+3. **Build issues**: Run `pnpm run clean` then rebuild
 
 ## Questions?
 

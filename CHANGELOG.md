@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### 🚀 Enhancements
+- Add `createDuplicates` option to control HTML file duplication
 - Add Dependabot auto-merge workflow for patch/minor updates
 - Add `release-prod.sh` script for streamlined GitHub Actions releases
 - Add `--dry-run` flag to release script for testing

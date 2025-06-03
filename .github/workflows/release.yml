@@ -60,15 +60,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
-      - name: Prepare development
-        run: pnpm run dev:prepare
-      
       - name: Run tests
         run: pnpm test
       
       - name: Run linting
         run: pnpm lint
       
+      - name: Prepare for type checking
+        run: pnpm run dev:prepare
+        
       - name: Run type checking
         run: pnpm run test:types
       

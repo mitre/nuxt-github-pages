@@ -29,6 +29,12 @@ export interface ModuleOptions {
    * @default false
    */
   trailingSlash?: boolean
+  /**
+   * Create duplicate HTML files to avoid GitHub Pages redirects
+   * Set to false if you only need canonical URLs without file duplication
+   * @default true
+   */
+  createDuplicates?: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -45,6 +51,7 @@ export default defineNuxtModule<ModuleOptions>({
     verbose: true,
     canonicalUrls: true,
     trailingSlash: false,
+    createDuplicates: true,
   },
   setup(options, nuxt) {
     if (!options.enabled) {
@@ -139,21 +146,23 @@ export default defineNuxtModule<ModuleOptions>({
                       }
                     }
 
-                    // Create duplicate at parent level
-                    const duplicatePath = join(publicDir!, `${dirPath}.html`)
+                    // Create duplicate at parent level if enabled
+                    if (options.createDuplicates) {
+                      const duplicatePath = join(publicDir!, `${dirPath}.html`)
 
-                    // Write the same content (with canonical) to the duplicate
-                    await fs.writeFile(duplicatePath, htmlContent, 'utf-8')
+                      // Write the same content (with canonical) to the duplicate
+                      await fs.writeFile(duplicatePath, htmlContent, 'utf-8')
 
-                    if (options.verbose) {
-                      logger.success(`Created duplicate: ${dirPath}.html`)
+                      if (options.verbose) {
+                        logger.success(`Created duplicate: ${dirPath}.html`)
+                      }
                     }
                   }
                   catch (error) {
                     logger.error(`Failed to process ${relativePath}:`, error)
                   }
                 }
-                else {
+                else if (options.createDuplicates) {
                   // No canonical URLs, just copy the file
                   const duplicatePath = join(publicDir!, `${dirPath}.html`)
 
