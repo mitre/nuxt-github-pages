@@ -19,6 +19,16 @@ export interface ModuleOptions {
    * @default true
    */
   verbose?: boolean
+  /**
+   * Add canonical URLs to prevent SEO duplicate content issues
+   * @default true
+   */
+  canonicalUrls?: boolean
+  /**
+   * Whether to use trailing slashes in canonical URLs
+   * @default false
+   */
+  trailingSlash?: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -33,6 +43,8 @@ export default defineNuxtModule<ModuleOptions>({
     enabled: true,
     outputDirs: ['dist', '.output/public'],
     verbose: true,
+    canonicalUrls: true,
+    trailingSlash: false,
   },
   setup(options, nuxt) {
     if (!options.enabled) {
@@ -99,17 +111,61 @@ export default defineNuxtModule<ModuleOptions>({
                 // Skip root index.html
                 if (dirPath === '.') continue
 
-                // Create duplicate at parent level
-                const duplicatePath = join(publicDir!, `${dirPath}.html`)
+                // Process canonical URLs
+                if (options.canonicalUrls) {
+                  try {
+                    let htmlContent = await fs.readFile(fullPath, 'utf-8')
 
-                try {
-                  await fs.copyFile(fullPath, duplicatePath)
-                  if (options.verbose) {
-                    logger.success(`Created duplicate: ${dirPath}.html`)
+                    // Determine the canonical path based on preference
+                    const canonicalPath = options.trailingSlash
+                      ? `/${dirPath}/`
+                      : `/${dirPath}`
+
+                    // Check if canonical already exists
+                    if (!htmlContent.includes('rel="canonical"')) {
+                      // Find the head tag and inject canonical link
+                      const headMatch = htmlContent.match(/<head[^>]*>/)
+                      if (headMatch) {
+                        const headTag = headMatch[0]
+                        const canonicalTag = `\n  <link rel="canonical" href="${canonicalPath}">`
+                        htmlContent = htmlContent.replace(headTag, headTag + canonicalTag)
+
+                        // Write the updated content back to the original file
+                        await fs.writeFile(fullPath, htmlContent, 'utf-8')
+
+                        if (options.verbose) {
+                          logger.info(`Added canonical URL to ${relativePath}: ${canonicalPath}`)
+                        }
+                      }
+                    }
+
+                    // Create duplicate at parent level
+                    const duplicatePath = join(publicDir!, `${dirPath}.html`)
+
+                    // Write the same content (with canonical) to the duplicate
+                    await fs.writeFile(duplicatePath, htmlContent, 'utf-8')
+
+                    if (options.verbose) {
+                      logger.success(`Created duplicate: ${dirPath}.html`)
+                    }
+                  }
+                  catch (error) {
+                    logger.error(`Failed to process ${relativePath}:`, error)
                   }
                 }
-                catch (error) {
-                  logger.error(`Failed to create duplicate for ${relativePath}:`, error)
+                else {
+                  // No canonical URLs, just copy the file
+                  const duplicatePath = join(publicDir!, `${dirPath}.html`)
+
+                  try {
+                    await fs.copyFile(fullPath, duplicatePath)
+                    if (options.verbose) {
+                      logger.success(`Created duplicate: ${dirPath}.html`)
+                    }
+                  }
+                  catch (error) {
+                    logger.error(`Failed to create duplicate for ${relativePath}:`, error)
+                  }
                 }
               }
             }
@@ -131,3 +187,4 @@ export default defineNuxtModule<ModuleOptions>({
     })
   },
 })
+// test

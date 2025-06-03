@@ -54,3 +54,10 @@ coverage
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Claude/AI Assistant files
+.claude/
+CLAUDE.md
+recovery-prompt.md
+session.md
+pr-summary.md

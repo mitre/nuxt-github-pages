@@ -27,6 +27,7 @@ This module automatically creates duplicate HTML files during the build process.
 - 🔧 Configurable output directories
 - 📝 TypeScript support
 - 🪵 Optional verbose logging
+- 🔍 SEO-friendly with automatic canonical URLs
 
 ## Quick Setup
 
@@ -74,7 +75,13 @@ export default defineNuxtConfig({
     outputDirs: ['dist', '.output/public'],
     
     // Show verbose logging (default: true)
-    verbose: true
+    verbose: true,
+    
+    // Add canonical URLs to prevent duplicate content SEO issues (default: true)
+    canonicalUrls: true,
+    
+    // Use trailing slashes in canonical URLs (default: false)
+    trailingSlash: false
   }
 })
 ```
@@ -96,12 +103,23 @@ export default defineNuxtConfig({
 - Default: `true`
 - Description: Show detailed logging during the build process.
 
+#### `canonicalUrls`
+- Type: `boolean`
+- Default: `true`
+- Description: Automatically inject canonical URLs into all HTML files to prevent duplicate content SEO issues. The canonical URL tells search engines which version of the page is preferred.
+
+#### `trailingSlash`
+- Type: `boolean`
+- Default: `false`
+- Description: Whether to use trailing slashes in canonical URLs. When `false`, canonical URLs will be `/path`. When `true`, they will be `/path/`. Choose based on your site's URL structure preference.
+
 ## How It Works
 
 1. During the `nuxt generate` build process, this module hooks into the `prerender:done` event
 2. It scans the output directory for all `index.html` files
 3. For each `index.html` found at `/path/to/page/index.html`, it creates a duplicate at `/path/to/page.html`
-4. This ensures both `/path/to/page` and `/path/to/page/` resolve correctly on GitHub Pages
+4. Optionally injects canonical URLs into all HTML files to prevent SEO duplicate content issues
+5. This ensures both `/path/to/page` and `/path/to/page/` resolve correctly on GitHub Pages
 
 ## Example
 
@@ -160,6 +178,102 @@ Netlify-specific `_redirects` only work on Netlify. This module works everywhere
 ### .htaccess or nginx
 These require server configuration access, which you don't have with GitHub Pages.
 
+## SEO Considerations
+
+By default, this module injects canonical URLs to prevent duplicate content issues. Both `/path` and `/path/` will point to the same canonical URL, telling search engines which version is preferred.
+
+```html
+<!-- Both pages will have the same canonical URL -->
+<!-- Default (trailingSlash: false): -->
+<link rel="canonical" href="/about">
+
+<!-- With trailingSlash: true: -->
+<link rel="canonical" href="/about/">
+```
+
+You can customize this behavior:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    // Disable canonical URLs entirely
+    canonicalUrls: false,
+    
+    // Or use trailing slashes in canonical URLs
+    trailingSlash: true  // Results in href="/path/"
+  }
+})
+```
+
+### Recommended Configurations by Platform
+
+These recommendations are based on the excellent [Trailing Slash Guide](https://github.com/slorber/trailing-slash-guide) by [Sébastien Lorber](https://github.com/slorber), which provides comprehensive testing and documentation of trailing slash behavior across all major hosting platforms. If you're dealing with trailing slash issues, his guide is an invaluable resource.
+
+#### GitHub Pages
+GitHub Pages redirects `/about` to `/about/` on refresh, indicating it prefers trailing slashes:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    canonicalUrls: true,
+    trailingSlash: true  // URLs like /about/ (with trailing slash)
+  }
+})
+```
+
+#### Netlify
+Netlify's "Pretty URLs" feature (enabled by default) prefers trailing slashes for directory-based content:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    canonicalUrls: true,
+    trailingSlash: true  // URLs like /about/ (with trailing slash)
+  }
+})
+```
+
+#### Cloudflare Pages
+Cloudflare Pages automatically adds trailing slashes and creates redirects:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    canonicalUrls: true,
+    trailingSlash: true  // URLs like /about/ (with trailing slash)
+  }
+})
+```
+
+#### Vercel
+Vercel is configurable but defaults to no trailing slashes:
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    canonicalUrls: true,
+    trailingSlash: false  // URLs like /about (no trailing slash)
+  }
+})
+```
+
+#### Disable Canonical URLs
+If you're managing canonical URLs through other means (like `useHead` or SEO modules):
+
+```ts
+export default defineNuxtConfig({
+  modules: ['nuxt-github-pages'],
+  githubPages: {
+    canonicalUrls: false  // Don't inject any canonical URLs
+  }
+})
+```
+
 ## Troubleshooting
 
 ### Module doesn't seem to run
@@ -186,17 +300,38 @@ export default defineNuxtConfig({
 
 ## Testing
 
-See [TEST_MATRIX.md](./TEST_MATRIX.md) for current test coverage and known gaps.
+```bash
+# Run tests
+pnpm run test
+
+# Run tests in watch mode
+pnpm run test:watch
+```
+
+See [test/README.md](./test/README.md) for detailed information about the testing approach and patterns used in this module.
+
+See [test/TEST_MATRIX.md](./test/TEST_MATRIX.md) for current test coverage.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- Development setup and workflow
+- Automated quality checks (git hooks)
+- Testing guidelines
+- Pull request process
+- Coding standards
+
+### Quick Start for Contributors
+
+```bash
+# Setup
+pnpm install
+pnpm run dev:prepare
+
+# Before committing
+pnpm run test:all
+```
 
 ## Development
 
@@ -216,19 +351,56 @@ pnpm run dev:build
 # Run ESLint
 pnpm run lint
 
-# Run Vitest
-pnpm run test
-pnpm run test:watch
+# Run type checking
+pnpm run test:types
+
+# Clean build artifacts
+pnpm run clean
+
+# Run ALL checks (recommended before committing)
+pnpm run test:all
 
 # Release new version
 pnpm run release
 ```
+
+### Development Workflow
+
+1. **Before starting work**: Run `pnpm install` and `pnpm run dev:prepare`
+2. **During development**: Use `pnpm run dev` to test changes in the playground
+3. **Before committing**: Run `pnpm run test:all` to ensure everything passes
+4. **After testing**: Run `pnpm run clean` to remove build artifacts
+
+### Automated Quality Checks
+
+This project uses git hooks to maintain code quality:
+
+- **Pre-commit hook**: Automatically runs ESLint on staged files and fixes issues
+- **Automatic formatting**: Code style issues are fixed automatically on commit
+- Files are linted and formatted using the Nuxt ESLint configuration
+
+### Development Scripts
+
+- `pnpm run test:all` - Complete test suite (install → prepare → test → lint → type check → clean)
+- `pnpm run clean` - Remove all build artifacts (preserves node_modules)
+- `./scripts/pre-release.sh` - Run all checks and build before releasing
+
+### Development Tips
+
+- The playground directory is for testing during development
+- Test fixtures are automatically cleaned during test runs
+- Build artifacts (.nuxt, .output, dist) are git-ignored
+- Always run `pnpm run test:all` before pushing changes
 
 ## License
 
 [Apache-2.0 License](./LICENSE.md)
 
 See [NOTICE.md](./NOTICE.md) for additional copyright and license information.
+
+## Security
+
+For security issues, please see our [Security Policy](SECURITY.md).
 
 ## Code of Conduct
 

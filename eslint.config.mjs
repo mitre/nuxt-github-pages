@@ -16,9 +16,9 @@ export default createConfigForNuxt({
   },
 })
   .append(
-    // Disable component name rule for test fixtures
+    // Disable component name rule for test fixtures and playground
     {
-      files: ['test/fixtures/**/*.vue'],
+      files: ['test/fixtures/**/*.vue', 'playground/**/*.vue'],
       rules: {
         'vue/multi-word-component-names': 'off',
       },

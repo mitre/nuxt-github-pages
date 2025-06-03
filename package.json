@@ -1,6 +1,6 @@
 {
   "name": "nuxt-github-pages",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Nuxt module to fix trailing slash issues for GitHub Pages deployments",
   "repository": "mitre/nuxt-github-pages",
   "license": "Apache-2.0",
@@ -38,7 +38,12 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "clean": "./scripts/clean.sh",
+    "test:all": "./scripts/test-all.sh",
+    "audit": "pnpm audit",
+    "audit:fix": "pnpm audit --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "@nuxt/kit": "^3.17.4"
@@ -53,9 +58,17 @@
     "changelogen": "^0.6.1",
     "eslint": "^9.27.0",
     "execa": "^9.6.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
     "nuxt": "^3.17.4",
     "typescript": "~5.8.3",
     "vitest": "^3.1.4",
     "vue-tsc": "^2.2.10"
-  }
+  },
+  "lint-staged": {
+    "*.{js,ts,mjs,vue}": [
+      "eslint --fix"
+    ]
+  },
+  "packageManager": "pnpm@9.14.4+sha512.c8180b3fbe4e4bca02c94234717896b5529740a6cbadf19fa78254270403ea2f27d4e1d46a08a0f56c89b63dc8ebfd3ee53326da720273794e6200fcf0d184ab"
 }

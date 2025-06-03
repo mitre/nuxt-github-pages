@@ -1,5 +1,8 @@
 export default defineNuxtConfig({
   modules: ['../src/module'],
   devtools: { enabled: true },
-  githubPages: {},
+  githubPages: {
+    verbose: true,
+    canonicalUrls: true,
+  },
 })
