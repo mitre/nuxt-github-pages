@@ -1,6 +1,6 @@
 {
   "name": "nuxt-github-pages",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Nuxt module to fix trailing slash issues for GitHub Pages deployments",
   "repository": "mitre/nuxt-github-pages",
   "license": "Apache-2.0",
