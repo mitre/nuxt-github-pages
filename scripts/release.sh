@@ -10,18 +10,38 @@
 #   ./scripts/release.sh major              # Major release
 #   ./scripts/release.sh 2.0.0              # Specific version
 #   ./scripts/release.sh minor --no-github  # Skip GitHub release
+#   ./scripts/release.sh minor --dry-run    # Test release without publishing
 
 set -e  # Exit on error
 
 # Parse arguments
 VERSION_TYPE=$1
 NO_GITHUB=false
+DRY_RUN=false
 
-if [[ "$2" == "--no-github" ]]; then
-  NO_GITHUB=true
-fi
+# Parse flags
+shift
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --no-github)
+      NO_GITHUB=true
+      shift
+      ;;
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
 
 echo "🚀 Starting release process..."
+if [ "$DRY_RUN" = true ]; then
+  echo "🔍 DRY RUN MODE - No changes will be made"
+fi
 echo ""
 
 # Step 1: Ensure we're on main branch
@@ -41,7 +61,11 @@ fi
 
 # Step 3: Pull latest changes
 echo "📥 Pulling latest changes..."
-git pull origin main
+if [ "$DRY_RUN" = false ]; then
+  git pull origin main
+else
+  echo "   [DRY RUN] Would pull from origin main"
+fi
 
 # Step 4: Install dependencies
 echo ""
@@ -89,11 +113,22 @@ if [ -n "$VERSION_TYPE" ]; then
   # Non-interactive mode
   case $VERSION_TYPE in
     patch|minor|major)
-      NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      if [ "$DRY_RUN" = false ]; then
+        NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      else
+        # Calculate what the new version would be
+        NEW_VERSION=$(node -p "require('semver').inc('$CURRENT_VERSION', '$VERSION_TYPE')")
+        echo "   [DRY RUN] Would update version to $NEW_VERSION"
+      fi
       ;;
     *)
       # Assume it's a specific version
-      NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      if [ "$DRY_RUN" = false ]; then
+        NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      else
+        NEW_VERSION=$VERSION_TYPE
+        echo "   [DRY RUN] Would update version to $NEW_VERSION"
+      fi
       ;;
   esac
 else
@@ -134,7 +169,11 @@ echo "📌 New version: $NEW_VERSION"
 # Step 13: Update changelog
 echo ""
 echo "📝 Updating CHANGELOG.md..."
-npx changelogen --no-output
+if [ "$DRY_RUN" = false ]; then
+  npx changelogen --no-output
+else
+  echo "   [DRY RUN] Would generate changelog for v$NEW_VERSION"
+fi
 
 # Step 14: Review changes
 echo ""
@@ -161,13 +200,21 @@ fi
 # Step 15: Commit version bump
 echo ""
 echo "💾 Committing version bump..."
-git add package.json CHANGELOG.md
-git commit -m "chore(release): v${NEW_VERSION}"
+if [ "$DRY_RUN" = false ]; then
+  git add package.json CHANGELOG.md
+  git commit -m "chore(release): v${NEW_VERSION}"
+else
+  echo "   [DRY RUN] Would commit: chore(release): v${NEW_VERSION}"
+fi
 
 # Step 16: Create git tag
 echo ""
 echo "🏷️  Creating git tag..."
-git tag -a "v${NEW_VERSION}" -m "Release v${NEW_VERSION}"
+if [ "$DRY_RUN" = false ]; then
+  git tag -a "v${NEW_VERSION}" -m "Release v${NEW_VERSION}"
+else
+  echo "   [DRY RUN] Would create tag: v${NEW_VERSION}"
+fi
 
 # Step 17: Clean before publish
 echo ""
@@ -187,12 +234,20 @@ pnpm run prepack
 # Step 20: Publish to npm
 echo ""
 echo "📤 Publishing to npm..."
-npm publish
+if [ "$DRY_RUN" = false ]; then
+  npm publish
+else
+  echo "   [DRY RUN] Would publish v${NEW_VERSION} to npm"
+fi
 
 # Step 21: Push to git
 echo ""
 echo "📤 Pushing to GitHub..."
-git push origin main --follow-tags
+if [ "$DRY_RUN" = false ]; then
+  git push origin main --follow-tags
+else
+  echo "   [DRY RUN] Would push main branch and v${NEW_VERSION} tag to GitHub"
+fi
 
 # Step 22: Create GitHub release (optional)
 if [ "$NO_GITHUB" = true ]; then
@@ -224,10 +279,14 @@ else
     CHANGELOG_ENTRY=$(awk "/^## v${NEW_VERSION}/,/^## v[0-9]/" CHANGELOG.md | sed '$d' | tail -n +2)
     
     # Create release via GitHub CLI
-    gh release create "v${NEW_VERSION}" \
-      --title "v${NEW_VERSION}" \
-      --notes "${CHANGELOG_ENTRY}" \
-      --verify-tag
+    if [ "$DRY_RUN" = false ]; then
+      gh release create "v${NEW_VERSION}" \
+        --title "v${NEW_VERSION}" \
+        --notes "${CHANGELOG_ENTRY}" \
+        --verify-tag
+    else
+      echo "   [DRY RUN] Would create GitHub release for v${NEW_VERSION}"
+    fi
   fi
 fi
 
