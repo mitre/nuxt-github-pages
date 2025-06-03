@@ -59,12 +59,28 @@ if ! git diff-index --quiet HEAD --; then
   exit 1
 fi
 
-# Step 3: Pull latest changes
+# Step 3: Pull latest changes and check npm
 echo "📥 Pulling latest changes..."
 if [ "$DRY_RUN" = false ]; then
   git pull origin main
+  
+  # Check if local version matches npm
+  LOCAL_VERSION=$(node -p "require('./package.json').version")
+  NPM_VERSION=$(npm view nuxt-github-pages@latest version 2>/dev/null || echo "")
+  
+  if [ -n "$NPM_VERSION" ] && [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
+    echo "⚠️  Warning: Local version ($LOCAL_VERSION) doesn't match npm version ($NPM_VERSION)"
+    echo "   This might indicate a release was done elsewhere."
+    read -p "   Continue anyway? (y/N) " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "❌ Release cancelled"
+      exit 1
+    fi
+  fi
 else
   echo "   [DRY RUN] Would pull from origin main"
+  echo "   [DRY RUN] Would check if local version matches npm"
 fi
 
 # Step 4: Install dependencies
