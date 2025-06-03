@@ -8,7 +8,15 @@ on:
 
 jobs:
   check-release:
-    if: github.event.pull_request.merged == true
+    # Only run for merged PRs from maintainers or with proper labels
+    if: |
+      github.event.pull_request.merged == true && 
+      (github.event.pull_request.author_association == 'OWNER' || 
+       github.event.pull_request.author_association == 'MEMBER' || 
+       github.event.pull_request.author_association == 'COLLABORATOR' ||
+       contains(github.event.pull_request.labels.*.name, 'release:patch') ||
+       contains(github.event.pull_request.labels.*.name, 'release:minor') ||
+       contains(github.event.pull_request.labels.*.name, 'release:major'))
     runs-on: ubuntu-latest
     outputs:
       should_release: ${{ steps.check.outputs.should_release }}

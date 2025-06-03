@@ -38,8 +38,6 @@ jobs:
       
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -91,7 +89,12 @@ jobs:
         run: pnpm run prepack
       
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: |
+          if [ -z "${{ secrets.NPM_TOKEN }}" ]; then
+            echo "❌ NPM_TOKEN secret not found. Please set it in repository settings."
+            exit 1
+          fi
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
