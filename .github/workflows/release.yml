@@ -16,6 +16,17 @@ on:
         required: true
         type: boolean
         default: true
+  workflow_call:
+    inputs:
+      version_type:
+        description: 'Version type'
+        required: true
+        type: string
+      create_github_release:
+        description: 'Create GitHub Release'
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   release:
