@@ -202,16 +202,24 @@ nuxt-github-pages/
 └── package.json        # Package configuration
 ```
 
-## Release Process
+## Release Process (Maintainers)
 
-Releases are managed by maintainers. The process is:
+Releases are managed by maintainers using our automated release script:
 
-1. Update version in `package.json`
-2. Update `CHANGELOG.md`
-3. Run `./scripts/pre-release.sh`
-4. Commit changes
-5. Tag the release
-6. Run `pnpm run release`
+```bash
+pnpm run release
+```
+
+This interactive script will:
+- Run all quality checks (tests, linting, types, security)
+- Prompt for version bump type
+- Update package.json and CHANGELOG.md
+- Create git commit and tag
+- Publish to npm
+- Push to GitHub
+- Optionally create GitHub release (no browser popup!)
+
+The entire process is streamlined and doesn't require manual version updates or browser interactions.
 
 ## Questions?
 
