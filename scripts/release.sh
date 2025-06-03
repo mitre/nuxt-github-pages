@@ -2,8 +2,24 @@
 
 # Comprehensive release script for nuxt-github-pages
 # This handles the complete release workflow smoothly
+#
+# Usage:
+#   ./scripts/release.sh                    # Interactive mode
+#   ./scripts/release.sh patch              # Patch release
+#   ./scripts/release.sh minor              # Minor release  
+#   ./scripts/release.sh major              # Major release
+#   ./scripts/release.sh 2.0.0              # Specific version
+#   ./scripts/release.sh minor --no-github  # Skip GitHub release
 
 set -e  # Exit on error
+
+# Parse arguments
+VERSION_TYPE=$1
+NO_GITHUB=false
+
+if [[ "$2" == "--no-github" ]]; then
+  NO_GITHUB=true
+fi
 
 echo "🚀 Starting release process..."
 echo ""
@@ -67,36 +83,50 @@ CURRENT_VERSION=$(node -p "require('./package.json').version")
 echo ""
 echo "📌 Current version: $CURRENT_VERSION"
 
-# Step 12: Ask for new version
+# Step 12: Determine new version
 echo ""
-echo "What type of release is this?"
-echo "  1) patch (bug fixes)"
-echo "  2) minor (new features)"
-echo "  3) major (breaking changes)"
-echo "  4) custom version"
-echo "  5) cancel"
-read -p "Select release type (1-5): " -n 1 -r
-echo ""
-
-case $REPLY in
-  1)
-    NEW_VERSION=$(npm version patch --no-git-tag-version)
-    ;;
-  2)
-    NEW_VERSION=$(npm version minor --no-git-tag-version)
-    ;;
-  3)
-    NEW_VERSION=$(npm version major --no-git-tag-version)
-    ;;
-  4)
-    read -p "Enter custom version: " CUSTOM_VERSION
-    NEW_VERSION=$(npm version $CUSTOM_VERSION --no-git-tag-version)
-    ;;
-  *)
-    echo "❌ Release cancelled"
-    exit 1
-    ;;
-esac
+if [ -n "$VERSION_TYPE" ]; then
+  # Non-interactive mode
+  case $VERSION_TYPE in
+    patch|minor|major)
+      NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      ;;
+    *)
+      # Assume it's a specific version
+      NEW_VERSION=$(npm version $VERSION_TYPE --no-git-tag-version)
+      ;;
+  esac
+else
+  # Interactive mode
+  echo "What type of release is this?"
+  echo "  1) patch (bug fixes)"
+  echo "  2) minor (new features)"
+  echo "  3) major (breaking changes)"
+  echo "  4) custom version"
+  echo "  5) cancel"
+  read -p "Select release type (1-5): " -n 1 -r
+  echo ""
+  
+  case $REPLY in
+    1)
+      NEW_VERSION=$(npm version patch --no-git-tag-version)
+      ;;
+    2)
+      NEW_VERSION=$(npm version minor --no-git-tag-version)
+      ;;
+    3)
+      NEW_VERSION=$(npm version major --no-git-tag-version)
+      ;;
+    4)
+      read -p "Enter custom version: " CUSTOM_VERSION
+      NEW_VERSION=$(npm version $CUSTOM_VERSION --no-git-tag-version)
+      ;;
+    *)
+      echo "❌ Release cancelled"
+      exit 1
+      ;;
+  esac
+fi
 
 NEW_VERSION=${NEW_VERSION#v}  # Remove 'v' prefix if present
 echo "📌 New version: $NEW_VERSION"
@@ -111,14 +141,21 @@ echo ""
 echo "📋 Review the changes:"
 git diff package.json CHANGELOG.md
 
-echo ""
-read -p "Commit these changes? (y/N) " -n 1 -r
-echo ""
-
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-  echo "❌ Release cancelled"
-  git checkout -- package.json CHANGELOG.md
-  exit 1
+if [ -z "$VERSION_TYPE" ]; then
+  # Interactive mode - ask for confirmation
+  echo ""
+  read -p "Commit these changes? (y/N) " -n 1 -r
+  echo ""
+  
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "❌ Release cancelled"
+    git checkout -- package.json CHANGELOG.md
+    exit 1
+  fi
+else
+  # Non-interactive mode - proceed automatically
+  echo ""
+  echo "✅ Proceeding with release (non-interactive mode)"
 fi
 
 # Step 15: Commit version bump
@@ -158,22 +195,40 @@ echo "📤 Pushing to GitHub..."
 git push origin main --follow-tags
 
 # Step 22: Create GitHub release (optional)
-echo ""
-echo "Would you like to create a GitHub release?"
-read -p "Create GitHub release? (Y/n) " -n 1 -r
-echo ""
-
-if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-  echo "📝 Creating GitHub release..."
+if [ "$NO_GITHUB" = true ]; then
+  echo ""
+  echo "⏭️  Skipping GitHub release (--no-github flag)"
+else
+  if [ -z "$VERSION_TYPE" ]; then
+    # Interactive mode
+    echo ""
+    echo "Would you like to create a GitHub release?"
+    read -p "Create GitHub release? (Y/n) " -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+      CREATE_GITHUB=true
+    else
+      CREATE_GITHUB=false
+    fi
+  else
+    # Non-interactive mode - create by default
+    CREATE_GITHUB=true
+  fi
   
-  # Extract the latest changelog entry
-  CHANGELOG_ENTRY=$(awk "/^## v${NEW_VERSION}/,/^## v[0-9]/" CHANGELOG.md | sed '$d' | tail -n +2)
-  
-  # Create release via GitHub CLI
-  gh release create "v${NEW_VERSION}" \
-    --title "v${NEW_VERSION}" \
-    --notes "${CHANGELOG_ENTRY}" \
-    --verify-tag
+  if [ "$CREATE_GITHUB" = true ]; then
+    echo ""
+    echo "📝 Creating GitHub release..."
+    
+    # Extract the latest changelog entry
+    CHANGELOG_ENTRY=$(awk "/^## v${NEW_VERSION}/,/^## v[0-9]/" CHANGELOG.md | sed '$d' | tail -n +2)
+    
+    # Create release via GitHub CLI
+    gh release create "v${NEW_VERSION}" \
+      --title "v${NEW_VERSION}" \
+      --notes "${CHANGELOG_ENTRY}" \
+      --verify-tag
+  fi
 fi
 
 # Step 23: Final cleanup
