@@ -1,4 +1,4 @@
-name: Auto Release
+name: Auto Release on PR Merge
 
 on:
   pull_request:
@@ -8,13 +8,11 @@ on:
 
 jobs:
   check-release:
-    # Only run for merged PRs from maintainers or with proper labels
+    # Only run for merged PRs with explicit release labels
+    # This prevents accidental releases - you must intentionally add a release label
     if: |
       github.event.pull_request.merged == true && 
-      (github.event.pull_request.author_association == 'OWNER' || 
-       github.event.pull_request.author_association == 'MEMBER' || 
-       github.event.pull_request.author_association == 'COLLABORATOR' ||
-       contains(github.event.pull_request.labels.*.name, 'release:patch') ||
+      (contains(github.event.pull_request.labels.*.name, 'release:patch') ||
        contains(github.event.pull_request.labels.*.name, 'release:minor') ||
        contains(github.event.pull_request.labels.*.name, 'release:major'))
     runs-on: ubuntu-latest

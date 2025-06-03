@@ -126,7 +126,7 @@ pnpm audit           # Check for vulnerabilities
 
 We use GitHub Actions for all production releases to ensure consistency and security.
 
-#### For Maintainers: Production Releases
+#### For Maintainers: Manual Releases
 
 ```bash
 # Recommended: Use the production release script
@@ -139,6 +139,15 @@ We use GitHub Actions for all production releases to ensure consistency and secu
 # 2. Trigger GitHub Actions release workflow
 # 3. Show you how to monitor progress
 ```
+
+#### For Maintainers: Automated PR Releases
+
+Add one of these labels to a PR to trigger an automatic release when merged:
+- `release:patch` - For bug fixes
+- `release:minor` - For new features
+- `release:major` - For breaking changes
+
+**Note**: Only PRs with explicit release labels will trigger releases. This prevents accidental releases.
 
 #### For Contributors: Testing Releases
 
