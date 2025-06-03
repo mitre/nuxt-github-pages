@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🚀 Enhancements
+- Add Dependabot auto-merge workflow for patch/minor updates
+- Add `release-prod.sh` script for streamlined GitHub Actions releases
+- Add `--dry-run` flag to release script for testing
+- Add npm version sync checking to prevent conflicts
+- Establish GitHub Actions as primary release workflow
+
+### 🩹 Fixes
+- Make release workflow reusable with `workflow_call` trigger
+- Handle both `workflow_dispatch` and `workflow_call` inputs in release workflow
+
+### 📖 Documentation
+- Clarify release workflows in README and CONTRIBUTING
+- Document auto-release workflow requirements
+- Add dependency management section to CONTRIBUTING
+- Improve auto-release safety by requiring explicit labels
+
+### 🏡 Chore
+- **deps**: Bump softprops/action-gh-release from 1 to 2
+- **deps-dev**: Bump vitest from 3.1.4 to 3.2.0
+
+### ⚡ Performance
+- Optimize CI with 3-minute timeouts for build-heavy tests
+
+### 🔧 Development
+- Require `--local` flag for direct releases via release.sh
+- Add comprehensive workflow documentation in .github/SETUP.md
+
 ## v1.1.1
 
 [compare changes](https://github.com/mitre/nuxt-github-pages/compare/v1.1.0...v1.1.1)
