@@ -61,6 +61,7 @@ The workflows use the built-in `GITHUB_TOKEN` with these permissions:
 1. **Test CI**: Open a PR to see all checks run
 2. **Test Labels**: Run the "Sync Labels" workflow manually
 3. **Test Release**: Use workflow dispatch to create a test release
+4. **Test Auto-Release**: Add a `release:*` label to a PR before merging
 
 ## Troubleshooting
 
