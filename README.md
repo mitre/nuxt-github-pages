@@ -178,6 +178,36 @@ Netlify-specific `_redirects` only work on Netlify. This module works everywhere
 ### .htaccess or nginx
 These require server configuration access, which you don't have with GitHub Pages.
 
+## Development
+
+### Releasing New Versions
+
+We use GitHub Actions for all production releases to ensure consistency and security.
+
+#### Production Releases (Recommended)
+
+```bash
+# Using our convenience script
+./scripts/release-prod.sh patch  # For bug fixes
+./scripts/release-prod.sh minor  # For new features  
+./scripts/release-prod.sh major  # For breaking changes
+
+# Or directly with GitHub CLI
+gh workflow run release.yml --field version_type=patch --field create_github_release=true
+```
+
+#### Local Development
+
+```bash
+# Test the release process without making changes
+./scripts/release.sh patch --dry-run
+
+# After a release, always sync your local repository
+git pull origin main --tags
+```
+
+For more details, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## SEO Considerations
 
 By default, this module injects canonical URLs to prevent duplicate content issues. Both `/path` and `/path/` will point to the same canonical URL, telling search engines which version is preferred.

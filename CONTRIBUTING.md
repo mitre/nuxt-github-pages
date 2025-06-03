@@ -115,9 +115,50 @@ pnpm run test:types  # Run type checking
 pnpm run lint        # Run ESLint
 pnpm run clean       # Clean build artifacts
 
-# Release
-pnpm run prepack     # Build module for distribution
-./scripts/pre-release.sh  # Run pre-release checks
+# Quality & Security
+pnpm audit           # Check for vulnerabilities
+
+# Pre-release Checks
+./scripts/pre-release.sh  # Run comprehensive pre-release checks
+```
+
+### Release Process
+
+We use GitHub Actions for all production releases to ensure consistency and security.
+
+#### For Maintainers: Production Releases
+
+```bash
+# Recommended: Use the production release script
+./scripts/release-prod.sh patch  # Bug fixes (1.0.0 -> 1.0.1)
+./scripts/release-prod.sh minor  # New features (1.0.0 -> 1.1.0)
+./scripts/release-prod.sh major  # Breaking changes (1.0.0 -> 2.0.0)
+
+# This will:
+# 1. Check your local state
+# 2. Trigger GitHub Actions release workflow
+# 3. Show you how to monitor progress
+```
+
+#### For Contributors: Testing Releases
+
+```bash
+# Test what a release would do without making changes
+./scripts/release.sh patch --dry-run
+./scripts/release.sh minor --dry-run
+
+# This will:
+# 1. Run all tests and checks
+# 2. Show what version would be created
+# 3. Display all actions that would be taken
+```
+
+#### Post-Release
+
+Always sync your local repository after a release:
+
+```bash
+git pull origin main --tags
 ```
 
 ## Testing

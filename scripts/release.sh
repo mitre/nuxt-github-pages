@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# Comprehensive release script for nuxt-github-pages
-# This handles the complete release workflow smoothly
+# Local development release script for nuxt-github-pages
+# 
+# IMPORTANT: For production releases, use GitHub Actions:
+#   gh workflow run release.yml --field version_type=patch|minor|major
+#
+# This script is for:
+#   - Testing release process locally (--dry-run)
+#   - Emergency releases if GitHub Actions is unavailable
+#   - Local development and debugging
 #
 # Usage:
-#   ./scripts/release.sh                    # Interactive mode
-#   ./scripts/release.sh patch              # Patch release
-#   ./scripts/release.sh minor              # Minor release  
-#   ./scripts/release.sh major              # Major release
-#   ./scripts/release.sh 2.0.0              # Specific version
-#   ./scripts/release.sh minor --no-github  # Skip GitHub release
-#   ./scripts/release.sh minor --dry-run    # Test release without publishing
+#   ./scripts/release.sh patch --dry-run    # Test release process
+#   ./scripts/release.sh minor --local      # Force local release (not recommended)
 
 set -e  # Exit on error
 
@@ -18,6 +20,7 @@ set -e  # Exit on error
 VERSION_TYPE=$1
 NO_GITHUB=false
 DRY_RUN=false
+LOCAL_RELEASE=false
 
 # Parse flags
 shift
@@ -31,12 +34,31 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=true
       shift
       ;;
+    --local)
+      LOCAL_RELEASE=true
+      shift
+      ;;
     *)
       echo "Unknown option: $1"
       exit 1
       ;;
   esac
 done
+
+# Require explicit flags
+if [ "$DRY_RUN" = false ] && [ "$LOCAL_RELEASE" = false ]; then
+  echo "⚠️  Production releases should use GitHub Actions:"
+  echo ""
+  echo "   gh workflow run release.yml --field version_type=$VERSION_TYPE"
+  echo ""
+  echo "To test locally, use --dry-run:"
+  echo "   ./scripts/release.sh $VERSION_TYPE --dry-run"
+  echo ""
+  echo "To force local release (not recommended), use --local:"
+  echo "   ./scripts/release.sh $VERSION_TYPE --local"
+  echo ""
+  exit 1
+fi
 
 echo "🚀 Starting release process..."
 if [ "$DRY_RUN" = true ]; then
@@ -59,9 +81,14 @@ if ! git diff-index --quiet HEAD --; then
   exit 1
 fi
 
-# Step 3: Pull latest changes and check npm
-echo "📥 Pulling latest changes..."
+# Step 3: Sync with remote
+echo "📥 Syncing with remote..."
+
+# Always fetch latest tags and commits
+git fetch --all --tags
+
 if [ "$DRY_RUN" = false ]; then
+  # Pull latest changes
   git pull origin main
   
   # Check if local version matches npm
@@ -70,17 +97,32 @@ if [ "$DRY_RUN" = false ]; then
   
   if [ -n "$NPM_VERSION" ] && [ "$LOCAL_VERSION" != "$NPM_VERSION" ]; then
     echo "⚠️  Warning: Local version ($LOCAL_VERSION) doesn't match npm version ($NPM_VERSION)"
-    echo "   This might indicate a release was done elsewhere."
-    read -p "   Continue anyway? (y/N) " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      echo "❌ Release cancelled"
+    echo "   This might indicate a release was done via GitHub Actions."
+    
+    if [ "$LOCAL_RELEASE" = true ]; then
+      read -p "   Continue with local release anyway? (y/N) " -n 1 -r
+      echo ""
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Release cancelled"
+        exit 1
+      fi
+    else
+      echo "❌ Release cancelled. Please sync your local repository."
       exit 1
     fi
   fi
+  
+  # Check for unpushed commits
+  UNPUSHED=$(git log origin/main..HEAD --oneline)
+  if [ -n "$UNPUSHED" ]; then
+    echo "⚠️  Warning: You have unpushed commits:"
+    echo "$UNPUSHED"
+    echo "   Please push or resolve these before releasing."
+    exit 1
+  fi
 else
   echo "   [DRY RUN] Would pull from origin main"
-  echo "   [DRY RUN] Would check if local version matches npm"
+  echo "   [DRY RUN] Would verify sync with npm and remote"
 fi
 
 # Step 4: Install dependencies
