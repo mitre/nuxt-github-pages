@@ -60,7 +60,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Only run during static generation
-    if (nuxt.options.nitro.preset !== 'static' && !nuxt.options._generate) {
+    if (nuxt.options.nitro.preset !== 'static' && !(nuxt.options.nitro.static || (nuxt.options as any)._generate /* TODO: remove in future */)) {
       return
     }
 
