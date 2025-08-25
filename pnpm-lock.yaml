@@ -22,8 +22,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.2(@nuxt/cli@3.26.0(magicast@0.3.5))(@vue/compiler-core@3.5.17)(esbuild@0.25.8)(typescript@5.9.2)(vue-tsc@2.2.12(typescript@5.9.2))(vue@3.5.17(typescript@5.9.2))
       '@nuxt/schema':
-        specifier: ^3.17.4
-        version: 3.17.7
+        specifier: ^4.0.3
+        version: 4.0.3
       '@nuxt/test-utils':
         specifier: ^3.19.1
         version: 3.19.2(magicast@0.3.5)(typescript@5.9.2)(vitest@3.2.4(@types/node@24.3.0)(jiti@2.4.2)(terser@5.43.1)(yaml@2.8.1))
@@ -927,6 +927,10 @@ packages:
 
   '@nuxt/schema@3.17.7':
     resolution: {integrity: sha512-c22IE/ECvjUScFyOJH/0VnSf5izDLmwkrCRlZKNhHzcNZUBFe5mCE5BM28QSVRSLGcC/mqg5POyNjf2tRwf+/w==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+
+  '@nuxt/schema@4.0.3':
+    resolution: {integrity: sha512-acDigyy8tF8xDCMFee00mt5u2kE5Qx5Y34ButBlibLzhguQjc+6f6FpMGdieN07oahjpegWIQG66yQywjw+sKw==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
   '@nuxt/telemetry@2.6.6':
@@ -1903,6 +1907,9 @@ packages:
 
   '@vue/shared@3.5.17':
     resolution: {integrity: sha512-CabR+UN630VnsJO/jHWYBC1YVXyMq94KKp6iF5MQgZJs5I8cmjw6oVMO1oDbtBkENSHSSn/UadWlW/OAgdmKrg==}
+
+  '@vue/shared@3.5.20':
+    resolution: {integrity: sha512-SoRGP596KU/ig6TfgkCMbXkr4YJ91n/QSdMuqeP5r3hVIYA3CPHUBCc7Skak0EAKV+5lL4KyIh61VA/pK1CIAA==}
 
   '@whatwg-node/disposablestack@0.0.6':
     resolution: {integrity: sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw==}
@@ -6225,11 +6232,20 @@ snapshots:
 
   '@nuxt/schema@3.17.7':
     dependencies:
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.20
       consola: 3.4.2
       defu: 6.1.4
       pathe: 2.0.3
       std-env: 3.9.0
+
+  '@nuxt/schema@4.0.3':
+    dependencies:
+      '@vue/shared': 3.5.20
+      consola: 3.4.2
+      defu: 6.1.4
+      pathe: 2.0.3
+      std-env: 3.9.0
+      ufo: 1.6.1
 
   '@nuxt/telemetry@2.6.6(magicast@0.3.5)':
     dependencies:
@@ -7088,7 +7104,7 @@ snapshots:
       '@babel/types': 7.28.2
       '@vue/babel-helper-vue-transform-on': 1.4.0
       '@vue/babel-plugin-resolve-type': 1.4.0(@babel/core@7.28.0)
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.20
     optionalDependencies:
       '@babel/core': 7.28.0
     transitivePeerDependencies:
@@ -7173,7 +7189,7 @@ snapshots:
       '@volar/language-core': 2.4.15
       '@vue/compiler-dom': 3.5.17
       '@vue/compiler-vue2': 2.7.16
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.20
       alien-signals: 1.0.13
       minimatch: 9.0.5
       muggle-string: 0.4.1
@@ -7204,6 +7220,8 @@ snapshots:
       vue: 3.5.17(typescript@5.9.2)
 
   '@vue/shared@3.5.17': {}
+
+  '@vue/shared@3.5.20': {}
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
