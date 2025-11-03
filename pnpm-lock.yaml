@@ -22,8 +22,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.2(@nuxt/cli@3.26.0(magicast@0.3.5))(@vue/compiler-core@3.5.22)(esbuild@0.25.8)(typescript@5.9.3)(vue-tsc@2.2.12(typescript@5.9.3))(vue@3.5.17(typescript@5.9.3))
       '@nuxt/schema':
-        specifier: ^3.17.4
-        version: 3.17.7
+        specifier: ^4.2.0
+        version: 4.2.0
       '@nuxt/test-utils':
         specifier: ^3.19.1
         version: 3.20.1(magicast@0.3.5)(typescript@5.9.3)(vitest@3.2.4(@types/node@24.10.0)(jiti@2.4.2)(terser@5.43.1)(yaml@2.8.1))
@@ -921,6 +921,10 @@ packages:
 
   '@nuxt/schema@3.17.7':
     resolution: {integrity: sha512-c22IE/ECvjUScFyOJH/0VnSf5izDLmwkrCRlZKNhHzcNZUBFe5mCE5BM28QSVRSLGcC/mqg5POyNjf2tRwf+/w==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+
+  '@nuxt/schema@4.2.0':
+    resolution: {integrity: sha512-YMbgpEyPokgOYME6BvY8Okk7GAIwhEFYzrkkkoU9IVgu0tKWetYRrjUwbd0eICqPm9EWDBQl5tTTNJ8xCndVbw==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
   '@nuxt/telemetry@2.6.6':
@@ -6333,11 +6337,19 @@ snapshots:
 
   '@nuxt/schema@3.17.7':
     dependencies:
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.22
       consola: 3.4.2
       defu: 6.1.4
       pathe: 2.0.3
-      std-env: 3.9.0
+      std-env: 3.10.0
+
+  '@nuxt/schema@4.2.0':
+    dependencies:
+      '@vue/shared': 3.5.22
+      defu: 6.1.4
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      std-env: 3.10.0
 
   '@nuxt/telemetry@2.6.6(magicast@0.3.5)':
     dependencies:
@@ -7313,7 +7325,7 @@ snapshots:
       '@volar/language-core': 2.4.15
       '@vue/compiler-dom': 3.5.17
       '@vue/compiler-vue2': 2.7.16
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.22
       alien-signals: 1.0.13
       minimatch: 9.0.5
       muggle-string: 0.4.1
@@ -9192,7 +9204,7 @@ snapshots:
       jiti: 1.21.7
       mlly: 1.7.4
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.2.0
       postcss: 8.5.6
       postcss-nested: 7.0.2(postcss@8.5.6)
       semver: 7.7.3
@@ -10665,7 +10677,7 @@ snapshots:
       mkdist: 2.3.0(typescript@5.9.3)(vue-sfc-transformer@0.1.16(@vue/compiler-core@3.5.22)(esbuild@0.25.8)(vue@3.5.17(typescript@5.9.3)))(vue-tsc@2.2.12(typescript@5.9.3))(vue@3.5.17(typescript@5.9.3))
       mlly: 1.7.4
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.2.0
       pretty-bytes: 7.0.0
       rollup: 4.46.1
       rollup-plugin-dts: 6.2.1(rollup@4.46.1)(typescript@5.9.3)
