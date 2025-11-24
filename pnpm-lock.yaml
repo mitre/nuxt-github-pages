@@ -22,8 +22,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.2(@nuxt/cli@3.26.0(magicast@0.3.5))(@vue/compiler-core@3.5.22)(esbuild@0.25.8)(typescript@5.9.3)(vue-tsc@2.2.12(typescript@5.9.3))(vue@3.5.17(typescript@5.9.3))
       '@nuxt/schema':
-        specifier: ^3.17.4
-        version: 3.17.7
+        specifier: ^4.2.1
+        version: 4.2.1
       '@nuxt/test-utils':
         specifier: ^3.19.1
         version: 3.20.1(magicast@0.3.5)(typescript@5.9.3)(vitest@3.2.4(@types/node@24.10.1)(jiti@2.4.2)(terser@5.43.1)(yaml@2.8.1))
@@ -925,6 +925,10 @@ packages:
 
   '@nuxt/schema@3.17.7':
     resolution: {integrity: sha512-c22IE/ECvjUScFyOJH/0VnSf5izDLmwkrCRlZKNhHzcNZUBFe5mCE5BM28QSVRSLGcC/mqg5POyNjf2tRwf+/w==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+
+  '@nuxt/schema@4.2.1':
+    resolution: {integrity: sha512-kSuma7UztDVyw8eAmN3rKFoaWjNRkJE9+kqwEurpuxG7nCwFPS7sUPSGzovzaofP+xV30tl6wveBEcDRWyQvgA==}
     engines: {node: ^14.18.0 || >=16.10.0}
 
   '@nuxt/telemetry@2.6.6':
@@ -1935,6 +1939,9 @@ packages:
   '@vue/shared@3.5.22':
     resolution: {integrity: sha512-F4yc6palwq3TT0u+FYf0Ns4Tfl9GRFURDN2gWG7L1ecIaS/4fCIuFOjMTnCyjsu/OK6vaDKLCrGAa+KvvH+h4w==}
 
+  '@vue/shared@3.5.25':
+    resolution: {integrity: sha512-AbOPdQQnAnzs58H2FrrDxYj/TJfmeS2jdfEEhgiKINy+bnOANmVizIEgq1r+C5zsbs6l1CCQxtcj71rwNQ4jWg==}
+
   '@whatwg-node/disposablestack@0.0.6':
     resolution: {integrity: sha512-LOtTn+JgJvX8WfBVJtF08TGrdjuFzGJc4mkP8EdDI8ADbvO7kiexYep1o8dwnt0okb0jYclCDXF13xU7Ge4zSw==}
     engines: {node: '>=18.0.0'}
@@ -2901,6 +2908,9 @@ packages:
 
   exsolve@1.0.7:
     resolution: {integrity: sha512-VO5fQUzZtI6C+vx4w/4BWJpg3s/5l+6pRQEHzFRM8WFi4XffSP1Z+4qi7GbjWbvRQEbdIco5mIMq+zX4rPuLrw==}
+
+  exsolve@1.0.8:
+    resolution: {integrity: sha512-LmDxfWXwcTArk8fUEnOfSZpHOJ6zOMUJKOtFLFqJLoKJetuQG874Uc7/Kki7zFLzYybmZhp1M7+98pfMqeX8yA==}
 
   externality@1.0.2:
     resolution: {integrity: sha512-LyExtJWKxtgVzmgtEHyQtLFpw1KFhQphF9nTG8TpAIVkiI/xQ3FJh75tRFLYl4hkn7BNIIdLJInuDAavX35pMw==}
@@ -6339,11 +6349,19 @@ snapshots:
 
   '@nuxt/schema@3.17.7':
     dependencies:
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.25
       consola: 3.4.2
       defu: 6.1.4
       pathe: 2.0.3
-      std-env: 3.9.0
+      std-env: 3.10.0
+
+  '@nuxt/schema@4.2.1':
+    dependencies:
+      '@vue/shared': 3.5.25
+      defu: 6.1.4
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      std-env: 3.10.0
 
   '@nuxt/telemetry@2.6.6(magicast@0.3.5)':
     dependencies:
@@ -7204,7 +7222,7 @@ snapshots:
       '@babel/types': 7.28.5
       '@vue/babel-helper-vue-transform-on': 1.4.0
       '@vue/babel-plugin-resolve-type': 1.4.0(@babel/core@7.28.0)
-      '@vue/shared': 3.5.22
+      '@vue/shared': 3.5.25
     optionalDependencies:
       '@babel/core': 7.28.0
     transitivePeerDependencies:
@@ -7319,7 +7337,7 @@ snapshots:
       '@volar/language-core': 2.4.15
       '@vue/compiler-dom': 3.5.17
       '@vue/compiler-vue2': 2.7.16
-      '@vue/shared': 3.5.17
+      '@vue/shared': 3.5.25
       alien-signals: 1.0.13
       minimatch: 9.0.5
       muggle-string: 0.4.1
@@ -7374,6 +7392,8 @@ snapshots:
   '@vue/shared@3.5.17': {}
 
   '@vue/shared@3.5.22': {}
+
+  '@vue/shared@3.5.25': {}
 
   '@whatwg-node/disposablestack@0.0.6':
     dependencies:
@@ -8483,6 +8503,8 @@ snapshots:
 
   exsolve@1.0.7: {}
 
+  exsolve@1.0.8: {}
+
   externality@1.0.2:
     dependencies:
       enhanced-resolve: 5.18.2
@@ -9198,7 +9220,7 @@ snapshots:
       jiti: 1.21.7
       mlly: 1.7.4
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.2.0
       postcss: 8.5.6
       postcss-nested: 7.0.2(postcss@8.5.6)
       semver: 7.7.3
@@ -9762,7 +9784,7 @@ snapshots:
   pkg-types@2.3.0:
     dependencies:
       confbox: 0.2.2
-      exsolve: 1.0.7
+      exsolve: 1.0.8
       pathe: 2.0.3
 
   pluralize@8.0.0: {}
@@ -10671,7 +10693,7 @@ snapshots:
       mkdist: 2.3.0(typescript@5.9.3)(vue-sfc-transformer@0.1.16(@vue/compiler-core@3.5.22)(esbuild@0.25.8)(vue@3.5.17(typescript@5.9.3)))(vue-tsc@2.2.12(typescript@5.9.3))(vue@3.5.17(typescript@5.9.3))
       mlly: 1.7.4
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.2.0
       pretty-bytes: 7.0.0
       rollup: 4.46.1
       rollup-plugin-dts: 6.2.1(rollup@4.46.1)(typescript@5.9.3)
